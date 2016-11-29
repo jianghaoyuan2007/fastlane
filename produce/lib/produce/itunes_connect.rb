@@ -28,6 +28,7 @@ module Produce
                                                               sku: Produce.config[:sku].to_s, # might be an int
                                                               bundle_id: app_identifier,
                                                               bundle_id_suffix: Produce.config[:bundle_identifier_suffix],
+                                                              mac: Produce.config[:platform] == "osx",
                                                               company_name: Produce.config[:company_name])
 
         UI.crash!("Something went wrong when creating the new app on iTC") if generated_app["adamId"].to_s.empty?
@@ -56,7 +57,7 @@ module Produce
     private
 
     def fetch_application
-      Spaceship::Application.find(@full_bundle_identifier)
+      Spaceship::Application.find(@full_bundle_identifier, mac: Produce.config[:platform] == "osx")
     end
 
     def wildcard_bundle?

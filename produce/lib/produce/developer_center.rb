@@ -21,6 +21,7 @@ module Produce
 
         app = Spaceship.app.create!(bundle_id: app_identifier,
                                          name: app_name,
+                                         mac: Produce.config[:platform] == "osx",
                                          disable_push: Produce.config[:disable_push])
 
         if app.name != Produce.config[:app_name]
@@ -48,7 +49,7 @@ module Produce
     private
 
     def app_exists?
-      Spaceship.app.find(app_identifier) != nil
+      Spaceship.app.find(app_identifier, mac: Produce.config[:platform] == "osx") != nil
     end
 
     def login
