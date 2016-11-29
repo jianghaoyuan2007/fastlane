@@ -56,6 +56,13 @@ module Produce
                                      description: "Skip the creation of the app on iTunes Connect",
                                      is_string: false,
                                      default_value: false),
+
+        FastlaneCore::ConfigItem.new(key: :disable_push,
+                                     short_option: "-P",
+                                     env_name: "PRODUCE_DISABLE_PUSH",
+                                     description: "Disable push feature on this app",
+                                     is_string: false),
+
         FastlaneCore::ConfigItem.new(key: :skip_devcenter,
                                      short_option: "-d",
                                      env_name: "PRODUCE_SKIP_DEVCENTER",
