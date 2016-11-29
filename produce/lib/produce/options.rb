@@ -57,11 +57,12 @@ module Produce
                                      is_string: false,
                                      default_value: false),
 
-        FastlaneCore::ConfigItem.new(key: :disable_push,
+        FastlaneCore::ConfigItem.new(key: :enabled_features,
                                      short_option: "-P",
-                                     env_name: "PRODUCE_DISABLE_PUSH",
-                                     description: "Disable push feature on this app",
-                                     is_string: false),
+                                     env_name: "PRODUCE_ENABLED_FEATURES",
+                                     description: "Hash with enabled features (e.g: {push: 'off'})",
+                                     is_string: false,
+                                     default_value: {}),
 
         FastlaneCore::ConfigItem.new(key: :platform,
                                      short_option: "-x",
