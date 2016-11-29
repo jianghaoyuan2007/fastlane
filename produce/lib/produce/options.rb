@@ -60,7 +60,7 @@ module Produce
         FastlaneCore::ConfigItem.new(key: :enabled_features,
                                      short_option: "-P",
                                      env_name: "PRODUCE_ENABLED_FEATURES",
-                                     description: "Hash with enabled features (e.g: {push: 'off'})",
+                                     description: "Array with Spaceship App Features",
                                      is_string: false,
                                      default_value: {}),
 
