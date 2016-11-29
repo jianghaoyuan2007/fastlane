@@ -63,6 +63,13 @@ module Produce
                                      description: "Disable push feature on this app",
                                      is_string: false),
 
+        FastlaneCore::ConfigItem.new(key: :platform,
+                                     short_option: "-x",
+                                     env_name: "PRODUCE_PLATFORM",
+                                     description: "Platform (ios, osx)",
+                                     is_string: true,
+                                     default_value: "ios"),
+
         FastlaneCore::ConfigItem.new(key: :skip_devcenter,
                                      short_option: "-d",
                                      env_name: "PRODUCE_SKIP_DEVCENTER",
