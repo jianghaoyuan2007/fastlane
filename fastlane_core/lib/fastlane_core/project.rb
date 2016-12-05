@@ -247,6 +247,7 @@ module FastlaneCore
         end
         return result.split(" = ").last
       rescue => ex
+        UI.error("Could not fetch #{key} from project file: #{ex}")
         return nil if optional # an optional value, we really don't care if something goes wrong
 
         UI.error(caller.join("\n\t"))
