@@ -240,13 +240,17 @@ module FastlaneCore
       end
 
       begin
+        UI.important("### DEBUG:#{@build_settings}")
         result = @build_settings.split("\n").find do |c|
+          UI.important("### DEBUG:#{c}")
           sp = c.split(" = ")
           next if sp.length == 0
           sp.first.strip == key
         end
         return result.split(" = ").last
       rescue => ex
+        UI.important("### DEBUG:#{ex}")
+        UI.important("### DEBUG:#{key}")
         UI.error("Could not fetch #{key} from project file: #{ex}")
         return nil if optional # an optional value, we really don't care if something goes wrong
 
