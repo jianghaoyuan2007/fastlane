@@ -48,7 +48,7 @@ describe FastlaneCore do
 
       value = FastlaneCore::PrintTable.print_values(config: @config, title: title, hide_keys: [:a_sensitive])
       expect(value[:title]).to eq(title.green)
-      expect(value[:rows]).to eq([['cert_name', "asdf"], ['output', '..'], ["a_bool", true]])
+      expect(value[:rows]).to eq([["cert_name", "asdf"], ["output", ".."], ["a_bool", true]])
     end
     it "automatically masks sensitive options" do
       value = FastlaneCore::PrintTable.print_values(config: @config)
@@ -75,7 +75,7 @@ describe FastlaneCore do
       @config[:a_hash][:foo] = 'bar'
       @config[:a_hash][:bar] = { foo: 'bar' }
       value = FastlaneCore::PrintTable.print_values(config: @config, hide_keys: [:cert_name, :a_bool, 'a_hash.foo', 'a_hash.bar.foo'])
-      expect(value[:rows]).to eq([["output", ".."], ["a_sensitive", "********"]])
+      expect(value[:rows]).to eq([["output", ".."],  ["a_sensitive", "********"]])
     end
 
     it "supports printing default values and ignores missing unset ones " do
@@ -84,14 +84,35 @@ describe FastlaneCore do
       value = FastlaneCore::PrintTable.print_values(config: @config)
       expect(value[:rows]).to eq([["output", "."], ["a_bool", true], ["a_sensitive", "********"]])
     end
+    describe "Breaks down lines" do
+      let(:long_breakable_text) { 'bar ' * 4000 }
+      before do
+        allow(FastlaneCore::Helper).to receive(:ci?).and_return(false)
+        allow(FastlaneCore::Helper).to receive(:is_ci?).and_return(false)
+        @config[:cert_name] = long_breakable_text
+      end
+      it "middle truncate" do
+        expect(FastlaneCore::Helper).to receive(:is_test?).and_return(false)
+        value = FastlaneCore::PrintTable.print_values(config: @config, hide_keys: [:output, :a_bool, :a_sensitive])
+        expect(value[:rows].count).to eq(1)
+        expect(value[:rows][0][1]).to include "..."
+        expect(value[:rows][0][1].length).to be < long_breakable_text.length
+      end
 
-    it "breaks down long lines" do
-      long_breakable_text = 'bar ' * 40
-      @config[:cert_name] = long_breakable_text
-      value = FastlaneCore::PrintTable.print_values(config: @config, hide_keys: [:output, :a_bool, :a_sensitive])
-      expect(value[:rows].count).to eq(1)
-      expect(value[:rows][0][1]).to end_with '...'
-      expect(value[:rows][0][1].length).to be < long_breakable_text.length
+      it "newline" do
+        expect(FastlaneCore::Helper).to receive(:is_test?).and_return(false)
+        value = FastlaneCore::PrintTable.print_values(config: @config, hide_keys: [:output, :a_bool, :a_sensitive], transform: :newline)
+        expect(value[:rows].count).to eq(1)
+        expect(value[:rows][0][1]).to include "\n"
+        expect(value[:rows][0][1].length).to be > long_breakable_text.length
+      end
+
+      it "no change" do
+        expect(FastlaneCore::Helper).to receive(:is_test?).and_return(false)
+        value = FastlaneCore::PrintTable.print_values(config: @config, hide_keys: [:output, :a_bool, :a_sensitive], transform: :none)
+        expect(value[:rows].count).to eq(1)
+        expect(value[:rows][0][1].length).to eq(long_breakable_text.length)
+      end
     end
 
     it "supports non-Configuration prints" do
