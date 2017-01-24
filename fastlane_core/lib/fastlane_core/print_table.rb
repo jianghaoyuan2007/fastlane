@@ -85,7 +85,7 @@ module FastlaneCore
                     value.delete!(color.last)
                   end
                 end
-                lines = value.scan(/.{,#{max_value_length}}/)
+                lines = value.wordwrap(max_value_length)
                 value = colorize_array(lines, colors)
               end
             end
