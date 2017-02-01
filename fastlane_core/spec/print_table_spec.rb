@@ -52,11 +52,11 @@ describe FastlaneCore do
     end
     it "automatically masks sensitive options" do
       value = FastlaneCore::PrintTable.print_values(config: @config)
-      expect(value[:rows]).to eq([["cert_name", "asdf"],:separator, ["output", ".."],:separator, ["a_bool", "true"],:separator, ["a_sensitive", "********"]])
+      expect(value[:rows]).to eq([["cert_name", "asdf"], :separator, ["output", ".."], :separator, ["a_bool", "true"], :separator, ["a_sensitive", "********"]])
     end
     it "supports mask_keys property with symbols and strings" do
       value = FastlaneCore::PrintTable.print_values(config: @config, mask_keys: [:cert_name, 'a_bool'])
-      expect(value[:rows]).to eq([["cert_name", "********"],:separator, ["output", ".."], :separator,["a_bool", "********"], :separator,["a_sensitive", "********"]])
+      expect(value[:rows]).to eq([["cert_name", "********"], :separator, ["output", ".."], :separator, ["a_bool", "********"], :separator, ["a_sensitive", "********"]])
     end
 
     it "supports hide_keys property with symbols and strings" do
@@ -68,7 +68,7 @@ describe FastlaneCore do
       @config[:a_hash][:foo] = 'bar'
       @config[:a_hash][:bar] = { foo: 'bar' }
       value = FastlaneCore::PrintTable.print_values(config: @config, hide_keys: [:cert_name, :a_bool])
-      expect(value[:rows]).to eq([["output", ".."],:separator, ["a_hash.foo", "bar"],:separator, ["a_hash.bar.foo", "bar"],:separator, ["a_sensitive", "********"]])
+      expect(value[:rows]).to eq([["output", ".."], :separator, ["a_hash.foo", "bar"], :separator, ["a_hash.bar.foo", "bar"], :separator, ["a_sensitive", "********"]])
     end
 
     it "supports hide_keys property in hashes" do
@@ -82,7 +82,7 @@ describe FastlaneCore do
       @config[:cert_name] = nil # compulsory without default
       @config[:output] = nil    # compulsory with default
       value = FastlaneCore::PrintTable.print_values(config: @config)
-      expect(value[:rows]).to eq([["output", "."],:separator, ["a_bool", "true"], :separator, ["a_sensitive", "********"]])
+      expect(value[:rows]).to eq([["output", "."], :separator, ["a_bool", "true"], :separator, ["a_sensitive", "********"]])
     end
     describe "Breaks down lines" do
       let(:long_breakable_text) { 'bar ' * 4000 }

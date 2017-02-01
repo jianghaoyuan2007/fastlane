@@ -25,7 +25,7 @@ module FastlaneCore
 
         params = {}
         transform = false if FastlaneCore::Env.truthy?("SKIP_TRANSFORM_TABLES")
-        
+
         if transform
           params[:rows] = transform_output(rows, transform)
         else
