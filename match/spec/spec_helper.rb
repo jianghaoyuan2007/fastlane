@@ -7,4 +7,7 @@ end
 def before_each_match
   ENV["DELIVER_USER"] = "flapple@krausefx.com"
   ENV["DELIVER_PASSWORD"] = "so_secret"
+  stub_match_requests
 end
+
+require_relative 'stubbing.rb'
