@@ -24,7 +24,7 @@ module FastlaneCore
         rows = self.collect_rows(options: options, hide_keys: hide_keys.map(&:to_s), mask_keys: mask_keys.map(&:to_s), prefix: '')
 
         params = {}
-        transform = false if FastlaneCore::Env.truthy?("SKIP_TRANSFORM_TABLES")
+        transform = false if FastlaneCore::Env.truthy?("FL_SKIP_TABLE_TRANSFORM")
 
         if transform
           params[:rows] = transform_output(rows, transform)
@@ -54,10 +54,10 @@ module FastlaneCore
 
       def transform_output(rows, transform)
         require 'fastlane_core/string_filters'
-        require 'io/console'
+        require 'tty-screen'
 
         return_array = []
-        tcols = IO.console.winsize[1]
+        tcols = TTY::Screen.width
 
         col_count = rows.map(&:length).first || 1
 
@@ -67,9 +67,9 @@ module FastlaneCore
 
         max_value_length = (max_length / col_count)
 
-        rows.map do |e|
+        rows.map do |row|
           new_row = []
-          e.each do |col|
+          row.each do |col|
             value = col.to_s.dup
             if transform == :truncate_middle
               value = value.middle_truncate(max_value_length)
